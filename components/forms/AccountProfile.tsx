@@ -7,6 +7,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { isBase64Image } from "@/lib/utils";
@@ -142,6 +143,7 @@ const AccountProfile = ({ user, btnTitle }) => {
                   onChange={(e) => handleImage(e, field.onChange)}
                 />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -161,6 +163,7 @@ const AccountProfile = ({ user, btnTitle }) => {
                   {...field}
                 />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -180,6 +183,7 @@ const AccountProfile = ({ user, btnTitle }) => {
                   {...field}
                 />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -198,6 +202,7 @@ const AccountProfile = ({ user, btnTitle }) => {
                   {...field}
                 />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
