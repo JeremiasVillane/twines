@@ -1,9 +1,10 @@
 import { ClerkProvider } from "@clerk/nextjs";
+import { Metadata } from "next";
 import { Inter } from "next/font/google";
 import React from "react";
-import "../global.css";
+import "../globals.css";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Threads clone",
   description: "A Threads app clone using Next.js 13",
 };
