@@ -37,7 +37,7 @@ const Page = async () => {
                     <span className="mr-1 text-primary-500">
                       {act.author.name}
                     </span>{" "}
-                    replied to your thread
+                    replied to your post
                   </p>
                 </article>
               </Link>
