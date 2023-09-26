@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import Thread from "../models/thread.model";
 import User from "../models/user.model";
+import Community from "../models/community.model";
 import { connectToDB } from "../mongoose";
 
 interface Params {
@@ -21,19 +22,30 @@ export async function createThread({
   try {
     connectToDB();
 
+    const communityIdObject = await Community.findOne(
+      { id: communityId },
+      { _id: 1 }
+    );
+
     const createdThread = await Thread.create({
       text,
       author,
-      community: null,
+      community: communityIdObject,
     });
 
     await User.findByIdAndUpdate(author, {
       $push: { threads: createdThread._id },
     });
 
+    if (communityIdObject) {
+      await Community.findByIdAndUpdate(communityIdObject, {
+        $push: { threads: createdThread._id },
+      });
+    }
+
     revalidatePath(path);
   } catch (error: any) {
-    throw new Error(`Error creating thread: ${error.message}`);
+    throw new Error(`Error creating post: ${error.message}`);
   }
 }
 
@@ -48,7 +60,14 @@ export async function fetchPosts(pageNumber = 1, pageSize = 20) {
     .sort({ createdAt: "desc" })
     .skip(skipAmount)
     .limit(pageSize)
-    .populate({ path: "author", model: User })
+    .populate({
+      path: "author",
+      model: User,
+    })
+    .populate({
+      path: "community",
+      model: Community,
+    })
     .populate({
       path: "children",
       populate: {
@@ -80,6 +99,11 @@ export async function fetchThreadById(id: string) {
         select: "_id id name image",
       })
       .populate({
+        path: "community",
+        model: Community,
+        select: "_id id name image",
+      })
+      .populate({
         path: "children",
         populate: [
           {
@@ -102,7 +126,68 @@ export async function fetchThreadById(id: string) {
 
     return thread;
   } catch (error: any) {
-    throw new Error(`Error fetching thread: ${error.message}`);
+    throw new Error(`Error fetching post: ${error.message}`);
+  }
+}
+
+async function fetchAllChildThreads(threadId: string): Promise<any[]> {
+  const childThreads = await Thread.find({ parentId: threadId });
+
+  const descendantThreads = [];
+  for (const childThread of childThreads) {
+    const descendants = await fetchAllChildThreads(childThread._id);
+    descendantThreads.push(childThread, ...descendants);
+  }
+
+  return descendantThreads;
+}
+
+export async function deleteThread(id: string, path: string): Promise<void> {
+  try {
+    connectToDB();
+
+    const mainThread = await Thread.findById(id).populate("author community");
+
+    if (!mainThread) {
+      throw new Error("Post not found");
+    }
+
+    const descendantThreads = await fetchAllChildThreads(id);
+
+    const descendantThreadIds = [
+      id,
+      ...descendantThreads.map((thread) => thread._id),
+    ];
+
+    const uniqueAuthorIds = new Set(
+      [
+        ...descendantThreads.map((thread) => thread.author?._id?.toString()),
+        mainThread.author?._id?.toString(),
+      ].filter((id) => id !== undefined)
+    );
+
+    const uniqueCommunityIds = new Set(
+      [
+        ...descendantThreads.map((thread) => thread.community?._id?.toString()),
+        mainThread.community?._id?.toString(),
+      ].filter((id) => id !== undefined)
+    );
+
+    await Thread.deleteMany({ _id: { $in: descendantThreadIds } });
+
+    await User.updateMany(
+      { _id: { $in: Array.from(uniqueAuthorIds) } },
+      { $pull: { threads: { $in: descendantThreadIds } } }
+    );
+
+    await Community.updateMany(
+      { _id: { $in: Array.from(uniqueCommunityIds) } },
+      { $pull: { threads: { $in: descendantThreadIds } } }
+    );
+
+    revalidatePath(path);
+  } catch (error: any) {
+    throw new Error(`Failed to delete post: ${error.message}`);
   }
 }
 
@@ -118,7 +203,7 @@ export async function addCommentToThread(
     const originalThread = await Thread.findById(threadId);
 
     if (!originalThread) {
-      throw new Error("Thread not found");
+      throw new Error("Post not found");
     }
 
     const commentThread = new Thread({
@@ -135,6 +220,6 @@ export async function addCommentToThread(
 
     revalidatePath(path);
   } catch (error: any) {
-    throw new Error(`Error adding comment to thread: ${error.message}`);
+    throw new Error(`Error adding comment to post: ${error.message}`);
   }
 }
