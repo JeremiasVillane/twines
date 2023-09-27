@@ -16,9 +16,11 @@ const Page = async ({ params }: { params: { id: string } }) => {
 
   return (
     <section>
+      {/* @ts-ignore */}
       <ProfileHeader
         accountId={userInfo.id}
         authUserId={user.id}
+        ownerId={params.id}
         name={userInfo.name}
         username={userInfo.username}
         imgUrl={userInfo.image}
@@ -30,16 +32,15 @@ const Page = async ({ params }: { params: { id: string } }) => {
           <TabsList className="tab">
             {profileTabs.map((tab) => (
               <TabsTrigger key={tab.label} value={tab.value} className="tab">
-                <Image
-                  src={tab.icon}
-                  alt={tab.label}
-                  width={24}
-                  height={24}
-                  className="object-contain"
-                />
+                <div
+                  title={tab.label}
+                  className="flex items-center justify-center gap-3"
+                >
+                  {tab.icon}
+                </div>
                 <p className="max-sm:hidden">{tab.label}</p>
 
-                {tab.label === "Posts" && (
+                {tab.label === "Publicaciones" && (
                   <p className="l-1 rounded-sm bg-light-4 px-2 py-1 !text-tiny-medium text-light-2">
                     {userInfo?.threads?.length}
                   </p>
@@ -47,6 +48,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
               </TabsTrigger>
             ))}
           </TabsList>
+
           {profileTabs.map((tab) => (
             <TabsContent
               key={`content-${tab.label}`}

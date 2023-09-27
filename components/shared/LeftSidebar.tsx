@@ -2,6 +2,7 @@
 
 import { sidebarLinks } from "@/constants";
 import { SignedIn, SignOutButton, useAuth } from "@clerk/nextjs";
+import { LogOutIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -27,14 +28,14 @@ function LeftSidebar() {
               key={link.label}
               className={`leftsidebar_link ${isActive && "bg-primary-500"}`}
             >
-              <Image
-                src={link.imgURL}
-                alt={link.label}
-                width={24}
-                height={24}
-              />
+              <div
+                title={link.label}
+                className="flex items-center justify-center gap-3"
+              >
+                {link.icon}
 
-              <p className="text-light-1 max-lg:hidden">{link.label}</p>
+                <p className="text-light-1 max-lg:hidden">{link.label}</p>
+              </div>
             </Link>
           );
         })}
@@ -44,14 +45,15 @@ function LeftSidebar() {
         <SignedIn>
           <SignOutButton signOutCallback={() => router.push("/sign-in")}>
             <div className="flex cursor-pointer gap-4 p-4">
-              <Image
+              {/* <Image
                 src="/assets/logout.svg"
                 alt="logout"
                 width={24}
                 height={24}
-              />
+              /> */}
+              <LogOutIcon color="white" />
 
-              <p className="text-light-2 max-lg:hidden">Logout</p>
+              <p className="text-light-2 max-lg:hidden">Salir</p>
             </div>
           </SignOutButton>
         </SignedIn>

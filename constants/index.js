@@ -1,44 +1,46 @@
+import { Bell, HomeIcon, PlusCircle, Search, Users, User, MessageSquare, MessageSquarePlusIcon, MessagesSquare, Tag, UserPlus } from "lucide-react";
+
 export const sidebarLinks = [
   {
-    imgURL: "/assets/home.svg",
+    icon: <HomeIcon size={24} color="white" />,
     route: "/",
-    label: "Home",
+    label: "Inicio",
   },
   {
-    imgURL: "/assets/search.svg",
+    icon: <Search size={24} color="white" />,
     route: "/search",
-    label: "Search",
+    label: "Buscar",
   },
   {
-    imgURL: "/assets/heart.svg",
+    icon: <Bell size={24} color="white" />,
     route: "/activity",
-    label: "Activity",
+    label: "Actividad",
   },
   {
-    imgURL: "/assets/create.svg",
+    icon: <MessageSquarePlusIcon size={24} color="white" />,
     route: "/create-thread",
-    label: "New Post",
+    label: "Publicar",
   },
   {
-    imgURL: "/assets/community.svg",
+    icon: <Users size={24} color="white" />,
     route: "/communities",
-    label: "Communities",
+    label: "Comunidades",
   },
   {
-    imgURL: "/assets/user.svg",
+    icon: <User size={24} color="white" />,
     route: "/profile",
-    label: "Profile",
+    label: "Perfil",
   },
 ];
 
 export const profileTabs = [
-  { value: "threads", label: "Posts", icon: "/assets/reply.svg" },
-  { value: "replies", label: "Replies", icon: "/assets/members.svg" },
-  { value: "tagged", label: "Tagged", icon: "/assets/tag.svg" },
+  { value: "threads", label: "Publicaciones", icon: <MessageSquare /> },
+  { value: "replies", label: "Comentarios", icon: <MessagesSquare /> },
+  { value: "tagged", label: "Menciones", icon: <Tag /> },
 ];
 
 export const communityTabs = [
-  { value: "threads", label: "Posts", icon: "/assets/reply.svg" },
-  { value: "members", label: "Members", icon: "/assets/members.svg" },
-  { value: "requests", label: "Requests", icon: "/assets/request.svg" },
+  { value: "threads", label: "Publicaciones", icon: <MessageSquare /> },
+  { value: "members", label: "Integrantes", icon: <Users /> },
+  { value: "requests", label: "Solicitudes", icon: <UserPlus /> },
 ];

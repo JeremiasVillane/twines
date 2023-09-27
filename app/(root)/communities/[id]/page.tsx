@@ -15,13 +15,15 @@ const Page = async ({ params }: { params: { id: string } }) => {
 
   return (
     <section>
+      {/* @ts-ignore */}
       <ProfileHeader
-        accountId={communityDetails.id}
+        accountId={communityDetails?.id}
         authUserId={user.id}
-        name={communityDetails.name}
-        username={communityDetails.username}
-        imgUrl={communityDetails.image}
-        bio={communityDetails.bio}
+        ownerId={params.id}
+        name={communityDetails?.name}
+        username={communityDetails?.username}
+        imgUrl={communityDetails?.image}
+        bio={communityDetails?.bio}
         type="Community"
       />
 
@@ -30,16 +32,15 @@ const Page = async ({ params }: { params: { id: string } }) => {
           <TabsList className="tab">
             {communityTabs.map((tab) => (
               <TabsTrigger key={tab.label} value={tab.value} className="tab">
-                <Image
-                  src={tab.icon}
-                  alt={tab.label}
-                  width={24}
-                  height={24}
-                  className="object-contain"
-                />
+                <div
+                  title={tab.label}
+                  className="flex items-center justify-center gap-3"
+                >
+                  {tab.icon}
+                </div>
                 <p className="max-sm:hidden">{tab.label}</p>
 
-                {tab.label === "Posts" && (
+                {tab.label === "Publicaciones" && (
                   <p className="l-1 rounded-sm bg-light-4 px-2 py-1 !text-tiny-medium text-light-2">
                     {communityDetails?.threads?.length}
                   </p>
@@ -47,14 +48,16 @@ const Page = async ({ params }: { params: { id: string } }) => {
               </TabsTrigger>
             ))}
           </TabsList>
+
           <TabsContent value="threads" className="w-full text-light-1">
             {/* @ts-ignore */}
             <ThreadsTab
               currentUserId={user.id}
-              accountId={communityDetails._id}
+              accountId={communityDetails?._id}
               accountType="Community"
             />
           </TabsContent>
+
           <TabsContent value="members" className="w-full text-light-1">
             <section className="mt-9 flex flex-col gap-10">
               {communityDetails?.members.map((member: any) => (
@@ -69,11 +72,12 @@ const Page = async ({ params }: { params: { id: string } }) => {
               ))}
             </section>
           </TabsContent>
+
           <TabsContent value="requests" className="w-full text-light-1">
             {/* @ts-ignore */}
             <ThreadsTab
               currentUserId={user.id}
-              accountId={communityDetails._id}
+              accountId={communityDetails?._id}
               accountType="Community"
             />
           </TabsContent>

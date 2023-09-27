@@ -35,7 +35,7 @@ const UserCard = ({ id, name, username, imgUrl, personType }: Props) => {
         className="user-card_btn"
         onClick={() => router.push(`/profile/${id}`)}
       >
-        View
+        Ver
       </Button>
     </article>
   );

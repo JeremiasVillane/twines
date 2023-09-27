@@ -1,8 +1,10 @@
+import { currentUser, UserButton } from "@clerk/nextjs";
 import Image from "next/image";
 
 interface Props {
   accountId: string;
   authUserId: string;
+  ownerId: string;
   name: string;
   username: string;
   imgUrl: string;
@@ -10,27 +12,41 @@ interface Props {
   type?: "User" | "Community";
 }
 
-const ProfileHeader = ({
+const ProfileHeader = async ({
   accountId,
   authUserId,
+  ownerId,
   name,
   username,
   imgUrl,
   bio,
   type,
 }: Props) => {
+  const user = await currentUser();
+  if (!user) return null;
+
   return (
     <div className="flex w-full flex-col justify-start">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="relative h-20 w-20 object-cover">
-            <Image
-              src={imgUrl}
-              alt="Profile Image"
-              fill
-              className="rounded-full object-cover shadow-2xl"
+          {user.id === ownerId ? (
+            <UserButton
+              appearance={{
+                elements: {
+                  avatarBox: "h-20 w-20",
+                },
+              }}
             />
-          </div>
+          ) : (
+            <div className="relative h-20 w-20 object-cover">
+              <Image
+                src={imgUrl}
+                alt="Profile Image"
+                fill
+                className="rounded-full object-cover shadow-2xl"
+              />
+            </div>
+          )}
 
           <div className="flex-1">
             <h2 className="text-left text-heading3-bold text-light-1">

@@ -2,7 +2,10 @@ import Bottombar from "@/components/shared/Bottombar";
 import LeftSidebar from "@/components/shared/LeftSidebar";
 import RightSidebar from "@/components/shared/RightSidebar";
 import Topbar from "@/components/shared/Topbar";
+import { esES } from "@/lib/localization/es-ES";
 import { ClerkProvider } from "@clerk/nextjs";
+import { dark } from "@clerk/themes";
+
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "../globals.css";
@@ -20,8 +23,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider>
-      <html lang="en">
+    <ClerkProvider
+      localization={esES}
+      appearance={{
+        baseTheme: dark,
+      }}
+    >
+      <html>
         <body className={inter.className}>
           <Topbar />
 
@@ -32,7 +40,7 @@ export default function RootLayout({
               <div className="w-full max-w-4xl">{children}</div>
             </section>
 
-            <RightSidebar />
+            {/* <RightSidebar /> */}
           </main>
 
           <Bottombar />

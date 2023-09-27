@@ -107,7 +107,7 @@ const ThreadCard = ({
               {isComment && comments.length > 0 && (
                 <Link href={`/thread/${id}`}>
                   <p className="mt-1 text-subtle-medium text-gray-1">
-                    {comments.length} replies
+                    {comments.length} comentario{comments.length > 1 && "s"}
                   </p>
                 </Link>
               )}
@@ -115,22 +115,25 @@ const ThreadCard = ({
           </div>
         </div>
       </div>
-      {!isComment && community && (
+      {!isComment && (
         <Link
-          href={`/communities/${community.id}`}
+          href={community ? `/communities/${community.id}` : `/thread/${id}`}
           className="mt-5 flex items-center"
         >
           <p className="text-subtle-medium text-gray-1">
-            {formatDateString(createdAt)} - {community.name} Community
+            {formatDateString(createdAt)}{" "}
+            {community && " - Comunidad " + community.name}
           </p>
 
-          <Image
-            src={community.image}
-            alt={community.name}
-            width={14}
-            height={14}
-            className="ml-1 rounded-full object-cover"
-          />
+          {community && (
+            <Image
+              src={community.image}
+              alt={community.name}
+              width={14}
+              height={14}
+              className="ml-1 rounded-full object-cover"
+            />
+          )}
         </Link>
       )}
     </article>

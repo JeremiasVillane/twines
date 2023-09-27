@@ -9,28 +9,14 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { createThread } from "@/lib/actions/thread.actions";
+import { ThreadValidation } from "@/lib/validations/thread";
+import { useOrganization } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { usePathname, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Textarea } from "../ui/textarea";
-import { useOrganization } from "@clerk/nextjs";
-
-// import { updateUser } from "@/lib/actions/user.actions";
-import { createThread } from "@/lib/actions/thread.actions";
-import { ThreadValidation } from "@/lib/validations/thread";
-
-interface Props {
-  user: {
-    id: string;
-    objectId: string;
-    username: string;
-    name: string;
-    bio: string;
-    image: string;
-  };
-  btnTitle: string;
-}
 
 function PostThread({ userId }: { userId: string }) {
   const router = useRouter();
@@ -68,7 +54,7 @@ function PostThread({ userId }: { userId: string }) {
           render={({ field }) => (
             <FormItem className="flex flex-col w-full gap-3">
               <FormLabel className="text-base-semibold text-light-2">
-                Content
+                Contenido
               </FormLabel>
               <FormControl className="no-focus border border-dark-4 bg-dark-3 text-light-1">
                 <Textarea rows={15} {...field} />
@@ -78,7 +64,7 @@ function PostThread({ userId }: { userId: string }) {
           )}
         />
         <Button type="submit" className="bg-primary-500">
-          Post Thread
+          Publicar
         </Button>
       </form>
     </Form>
