@@ -1,4 +1,15 @@
-import { Bell, HomeIcon, PlusCircle, Search, Users, User, MessageSquare, MessageSquarePlusIcon, MessagesSquare, Tag, UserPlus } from "lucide-react";
+import {
+  Bell,
+  HomeIcon,
+  MessageSquare,
+  MessageSquarePlusIcon,
+  MessagesSquare,
+  Search,
+  Tag,
+  User,
+  UserPlus,
+  Users,
+} from "lucide-react";
 
 export const sidebarLinks = [
   {
