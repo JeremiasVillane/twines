@@ -57,7 +57,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
             >
               {/* @ts-ignore */}
               <ThreadsTab
-                currentUserId={user.id}
+                currentUserId={JSON.stringify(userInfo._id)}
                 accountId={userInfo.id}
                 accountType="User"
               />

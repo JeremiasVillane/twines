@@ -9,7 +9,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { createThread } from "@/lib/actions/thread.actions";
+import { createPost } from "@/lib/actions/thread.actions";
 import { ThreadValidation } from "@/lib/validations/thread";
 import { useOrganization } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -32,7 +32,7 @@ function PostThread({ userId }: { userId: string }) {
   });
 
   const onSubmit = async (values: z.infer<typeof ThreadValidation>) => {
-    await createThread({
+    await createPost({
       text: values.thread,
       author: userId,
       communityId: organization ? organization.id : null,

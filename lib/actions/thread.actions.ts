@@ -5,6 +5,7 @@ import Thread from "../models/thread.model";
 import User from "../models/user.model";
 import Community from "../models/community.model";
 import { connectToDB } from "../mongoose";
+import Like from "../models/like.model";
 
 interface Params {
   text: string;
@@ -13,12 +14,7 @@ interface Params {
   path: string;
 }
 
-export async function createThread({
-  text,
-  author,
-  communityId,
-  path,
-}: Params) {
+export async function createPost({ text, author, communityId, path }: Params) {
   try {
     connectToDB();
 
@@ -88,7 +84,7 @@ export async function fetchPosts(pageNumber = 1, pageSize = 20) {
   return { posts, isNext };
 }
 
-export async function fetchThreadById(id: string) {
+export async function fetchPostById(id: string) {
   connectToDB();
 
   try {
@@ -142,7 +138,7 @@ async function fetchAllChildThreads(threadId: string): Promise<any[]> {
   return descendantThreads;
 }
 
-export async function deleteThread(id: string, path: string): Promise<void> {
+export async function deletePost(id: string, path: string): Promise<void> {
   try {
     connectToDB();
 
@@ -191,7 +187,7 @@ export async function deleteThread(id: string, path: string): Promise<void> {
   }
 }
 
-export async function addCommentToThread(
+export async function addCommentToPost(
   threadId: string,
   commentText: string,
   userId: string,
@@ -201,7 +197,6 @@ export async function addCommentToThread(
 
   try {
     const originalThread = await Thread.findById(threadId);
-
     if (!originalThread) {
       throw new Error("Post not found");
     }
@@ -221,5 +216,54 @@ export async function addCommentToThread(
     revalidatePath(path);
   } catch (error: any) {
     throw new Error(`Error adding comment to post: ${error.message}`);
+  }
+}
+
+export async function likePost(threadId: string, userId: string, path: string) {
+  connectToDB();
+
+  try {
+    const threadToLike = await Thread.findById(threadId);
+    const currentUser = await User.findById(userId);
+    let currentLike: any;
+
+    if (!threadToLike) {
+      throw new Error("Post not found");
+    }
+
+    const { likes } = threadToLike;
+    const { likedPosts } = currentUser;
+
+    const likeDocuments = await Like.find({ _id: { $in: likes } });
+
+    const likedByUsers: string[] = likeDocuments.map(
+      (like: { likedBy: { toString: () => string } }) => like.likedBy.toString()
+    );
+    const isCurrentUserAlreadyLiked = likedByUsers.includes(userId);
+
+    if (!isCurrentUserAlreadyLiked) {
+      const like = new Like({
+        postId: threadId,
+        likedBy: userId,
+      });
+
+      currentLike = await like.save();
+
+      threadToLike.likes.push(currentLike._id);
+      currentUser.likedPosts.push(currentLike._id);
+    } else {
+      const likeIndexToRemove = likedByUsers.findIndex((id) => id === userId);
+
+      if (likeIndexToRemove !== -1) {
+        threadToLike.likes.splice(likeIndexToRemove, 1);
+        currentUser.likedPosts.splice(likeIndexToRemove, 1);
+      }
+    }
+
+    await threadToLike.save();
+
+    revalidatePath(path);
+  } catch (error: any) {
+    throw new Error(`Error liking post: ${error.message}`);
   }
 }

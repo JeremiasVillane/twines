@@ -7,19 +7,15 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "@/components/ui/form";
+import { addCommentToPost } from "@/lib/actions/thread.actions";
+import { CommentValidation } from "@/lib/validations/thread";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { usePathname, useRouter } from "next/navigation";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Input } from "../ui/input";
-
-// import { updateUser } from "@/lib/actions/user.actions";
-// import { createThread } from "@/lib/actions/thread.actions";
-import { CommentValidation } from "@/lib/validations/thread";
-import Image from "next/image";
-import { addCommentToThread } from "@/lib/actions/thread.actions";
 
 interface Props {
   threadId: string;
@@ -28,7 +24,6 @@ interface Props {
 }
 
 const Comment = ({ threadId, currentUserImg, currentUserId }: Props) => {
-  const router = useRouter();
   const pathname = usePathname();
 
   const form = useForm({
@@ -39,7 +34,7 @@ const Comment = ({ threadId, currentUserImg, currentUserId }: Props) => {
   });
 
   const onSubmit = async (values: z.infer<typeof CommentValidation>) => {
-    await addCommentToThread(
+    await addCommentToPost(
       threadId,
       values.thread,
       JSON.parse(currentUserId),

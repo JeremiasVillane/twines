@@ -1,6 +1,8 @@
 import { formatDateString } from "@/lib/utils";
+import { Forward, MessageSquare, Repeat2, Send, Share } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import LikeButton from "../shared/LikeButton";
 
 interface Props {
   id: string;
@@ -23,6 +25,7 @@ interface Props {
       image: string;
     };
   }[];
+  likes?: { likedBy: string }[];
   isComment?: boolean;
 }
 
@@ -35,6 +38,7 @@ const ThreadCard = ({
   community,
   createdAt,
   comments,
+  likes,
   isComment,
 }: Props) => {
   return (
@@ -69,48 +73,37 @@ const ThreadCard = ({
 
             <div className={`${isComment && "mb-10"} mt-5 flex flex-col gap-3`}>
               <div className="flex gap-3.5">
-                <Image
-                  src="/assets/heart-gray.svg"
-                  alt="heart"
-                  width={24}
-                  height={24}
-                  className="cursor-pointer object-contain"
+                <LikeButton
+                  threadId={JSON.stringify(id)}
+                  userId={currentUserId}
+                  likes={likes ? likes.length : 0}
                 />
 
                 <Link href={`/thread/${id}`}>
-                  <Image
-                    src="/assets/reply.svg"
-                    alt="reply"
-                    width={24}
-                    height={24}
-                    className="cursor-pointer object-contain"
-                  />
+                  <span title="Comentarios">
+                    <MessageSquare strokeWidth={1.5} color="rgb(92 92 123)" />
+                  </span>
                 </Link>
 
-                <Image
-                  src="/assets/repost.svg"
-                  alt="repost"
-                  width={24}
-                  height={24}
-                  className="cursor-pointer object-contain"
-                />
+                <span title="RePublicar">
+                  <Repeat2 strokeWidth={1.5} color="rgb(92 92 123)" />
+                </span>
 
-                <Image
-                  src="/assets/share.svg"
-                  alt="share"
-                  width={24}
-                  height={24}
-                  className="cursor-pointer object-contain"
-                />
+                <span title="Compartir">
+                  <Forward strokeWidth={1.5} color="rgb(92 92 123)" />
+                </span>
               </div>
 
-              {isComment && comments.length > 0 && (
-                <Link href={`/thread/${id}`}>
-                  <p className="mt-1 text-subtle-medium text-gray-1">
-                    {comments.length} comentario{comments.length > 1 && "s"}
-                  </p>
-                </Link>
-              )}
+              {
+                // isComment &&
+                comments.length > 0 && (
+                  <Link href={`/thread/${id}`}>
+                    <p className="mt-1 text-subtle-medium text-gray-1">
+                      {comments.length} comentario{comments.length > 1 && "s"}
+                    </p>
+                  </Link>
+                )
+              }
             </div>
           </div>
         </div>
