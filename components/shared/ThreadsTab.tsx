@@ -1,22 +1,64 @@
 import { fetchCommunityPosts } from "@/lib/actions/community.actions";
-import { fetchUserPosts } from "@/lib/actions/user.actions";
+import {
+  fetchUserPosts,
+  getLikedPostsByUser,
+} from "@/lib/actions/user.actions";
 import { redirect } from "next/navigation";
 import ThreadCard from "../cards/ThreadCard";
+
+interface Result {
+  name: string;
+  image: string;
+  id: string;
+  threads: {
+    _id: string;
+    text: string;
+    parentId: string | null;
+    author: {
+      name: string;
+      image: string;
+      id: string;
+    };
+    community: {
+      id: string;
+      name: string;
+      image: string;
+    } | null;
+    createdAt: string;
+    children: {
+      author: {
+        image: string;
+      };
+    }[];
+  }[];
+}
 
 interface Props {
   currentUserId: string;
   accountId: string;
   accountType: string;
+  data: string;
 }
 
-const ThreadsTab = async ({ currentUserId, accountId, accountType }: Props) => {
+const ThreadsTab = async ({
+  currentUserId,
+  accountId,
+  accountType,
+  data,
+}: Props) => {
   let result: any;
 
-  accountType === "Community"
-    ? (result = await fetchCommunityPosts(accountId))
-    : (result = await fetchUserPosts(accountId));
+  if (accountType === "User") {
+    if (data === "Publicaciones") {
+      result = await fetchUserPosts(accountId);
+    } else if (data === "Favoritos") {
+      result = await getLikedPostsByUser(accountId);
+    } else result = await fetchUserPosts(accountId);
+  } else {
+    result = await fetchCommunityPosts(accountId);
+  }
 
-  if (!result) redirect("/");
+  // if (!result) redirect("/");
 
   return (
     <section className="mt-9 flex flex-col gap-10">

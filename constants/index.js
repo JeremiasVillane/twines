@@ -1,5 +1,6 @@
 import {
   Bell,
+  Heart,
   HomeIcon,
   MessageSquare,
   MessageSquarePlusIcon,
@@ -47,7 +48,7 @@ export const sidebarLinks = [
 export const profileTabs = [
   { value: "threads", label: "Publicaciones", icon: <MessageSquare /> },
   { value: "replies", label: "Comentarios", icon: <MessagesSquare /> },
-  { value: "tagged", label: "Menciones", icon: <Tag /> },
+  { value: "favs", label: "Favoritos", icon: <Heart /> },
 ];
 
 export const communityTabs = [

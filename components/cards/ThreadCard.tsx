@@ -75,7 +75,7 @@ const ThreadCard = ({
               <div className="flex gap-3.5">
                 <LikeButton
                   threadId={JSON.stringify(id)}
-                  userId={currentUserId}
+                  userId={author.id}
                   likes={likes ? likes.length : 0}
                 />
 

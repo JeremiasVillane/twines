@@ -4,7 +4,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { profileTabs } from "@/constants";
 import { fetchUser } from "@/lib/actions/user.actions";
 import { currentUser } from "@clerk/nextjs";
-import Image from "next/image";
 import { redirect } from "next/navigation";
 
 const Page = async ({ params }: { params: { id: string } }) => {
@@ -49,20 +48,35 @@ const Page = async ({ params }: { params: { id: string } }) => {
             ))}
           </TabsList>
 
-          {profileTabs.map((tab) => (
-            <TabsContent
-              key={`content-${tab.label}`}
-              value={tab.value}
-              className="w-full text-light-1"
-            >
-              {/* @ts-ignore */}
-              <ThreadsTab
-                currentUserId={JSON.stringify(userInfo._id)}
-                accountId={userInfo.id}
-                accountType="User"
-              />
-            </TabsContent>
-          ))}
+          <TabsContent value="threads" className="w-full text-light-1">
+            {/* @ts-ignore */}
+            <ThreadsTab
+              currentUserId={user.id}
+              accountId={userInfo.id}
+              accountType="User"
+              data="Publicaciones"
+            />
+          </TabsContent>
+
+          <TabsContent value="replies" className="w-full text-light-1">
+            {/* @ts-ignore */}
+            <ThreadsTab
+              currentUserId={user.id}
+              accountId={userInfo.id}
+              accountType="User"
+              data="Publicaciones"
+            />
+          </TabsContent>
+
+          <TabsContent value="favs" className="w-full text-light-1">
+            {/* @ts-ignore */}
+            <ThreadsTab
+              currentUserId={userInfo._id}
+              accountId={userInfo.id}
+              accountType="User"
+              data="Favoritos"
+            />
+          </TabsContent>
         </Tabs>
       </div>
     </section>

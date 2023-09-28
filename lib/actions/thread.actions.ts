@@ -224,7 +224,7 @@ export async function likePost(threadId: string, userId: string, path: string) {
 
   try {
     const threadToLike = await Thread.findById(threadId);
-    const currentUser = await User.findById(userId);
+    const currentUser = await User.findOne({ id: userId });
     let currentLike: any;
 
     if (!threadToLike) {
@@ -232,34 +232,57 @@ export async function likePost(threadId: string, userId: string, path: string) {
     }
 
     const { likes } = threadToLike;
-    const { likedPosts } = currentUser;
 
-    const likeDocuments = await Like.find({ _id: { $in: likes } });
+    if (likes.length > 0) {
+      const likeDocuments = await Like.find({ _id: { $in: likes } });
 
-    const likedByUsers: string[] = likeDocuments.map(
-      (like: { likedBy: { toString: () => string } }) => like.likedBy.toString()
-    );
-    const isCurrentUserAlreadyLiked = likedByUsers.includes(userId);
+      const likedByUsers: string[] = likeDocuments.map(
+        (like: { likedBy: { toString: () => string } }) =>
+          like.likedBy.toString()
+      );
+      const isCurrentUserAlreadyLiked = likedByUsers.includes(
+        currentUser._id.toString()
+      );
 
-    if (!isCurrentUserAlreadyLiked) {
+      if (!isCurrentUserAlreadyLiked) {
+        const like = new Like({
+          postId: threadId,
+          likedBy: currentUser._id,
+        });
+
+        currentLike = await like.save();
+
+        threadToLike.likes.push(currentLike._id);
+        currentUser.likedPosts.push(threadId);
+      } else {
+        const likeIndexToRemove = likedByUsers.findIndex(
+          (id) => id === currentUser._id.toString()
+        );
+
+        if (likeIndexToRemove !== -1) {
+          threadToLike.likes.splice(likeIndexToRemove, 1);
+          currentUser.likedPosts.splice(likeIndexToRemove, 1);
+        }
+
+        const currentUserLikeInPost = likeDocuments.find(
+          (like) => like.likedBy.toString() === currentUser._id.toString()
+        );
+
+        await Like.findByIdAndDelete(currentUserLikeInPost);
+      }
+    } else {
       const like = new Like({
         postId: threadId,
-        likedBy: userId,
+        likedBy: currentUser._id,
       });
 
       currentLike = await like.save();
 
       threadToLike.likes.push(currentLike._id);
-      currentUser.likedPosts.push(currentLike._id);
-    } else {
-      const likeIndexToRemove = likedByUsers.findIndex((id) => id === userId);
-
-      if (likeIndexToRemove !== -1) {
-        threadToLike.likes.splice(likeIndexToRemove, 1);
-        currentUser.likedPosts.splice(likeIndexToRemove, 1);
-      }
+      currentUser.likedPosts.push(threadId);
     }
 
+    await currentUser.save();
     await threadToLike.save();
 
     revalidatePath(path);

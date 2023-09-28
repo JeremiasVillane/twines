@@ -14,7 +14,7 @@ const LikeButton = ({ threadId, userId, likes }: Props) => {
   const pathname = usePathname();
 
   const handleLike = async () => {
-    await likePost(JSON.parse(threadId), JSON.parse(userId), pathname);
+    await likePost(JSON.parse(threadId), userId, pathname);
   };
 
   return (

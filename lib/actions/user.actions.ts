@@ -3,6 +3,7 @@
 import { FilterQuery, SortOrder } from "mongoose";
 import { revalidatePath } from "next/cache";
 import Community from "../models/community.model";
+import Like from "../models/like.model";
 import Thread from "../models/thread.model";
 import User from "../models/user.model";
 import { connectToDB } from "../mongoose";
@@ -150,5 +151,47 @@ export async function getActivity(userId: string) {
     return replies;
   } catch (error: any) {
     throw new Error(`Failed to fetch activity: ${error.message}`);
+  }
+}
+
+export async function getLikedPostsByUser(userId: string) {
+  try {
+    connectToDB();
+
+    const user = await User.findOne({id: userId});
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const userWithPosts = await User.findOne({id: userId}).populate({
+      path: "threads",
+      populate: [
+        {
+          path: "community",
+          model: Community,
+          select: "name id image _id",
+        },
+        {
+          path: "children",
+          model: Thread,
+          populate: {
+            path: "author",
+            model: User,
+            select: "name image id",
+          },
+        },
+      ],
+    });
+
+    const likedThreads = userWithPosts?.threads?.filter((thread: any): any => {
+      return user?.likedPosts?.includes(thread._id.toString());
+    });
+
+    userWithPosts.threads = likedThreads || [];
+console.log("userWithPosts: ", userWithPosts)
+    return userWithPosts;
+  } catch (error: any) {
+    throw new Error(`Failed to fetch liked posts: ${error.message}`);
   }
 }
