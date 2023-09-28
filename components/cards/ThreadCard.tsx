@@ -2,6 +2,7 @@ import { formatDateString } from "@/lib/utils";
 import { Forward, MessageSquare, Repeat2, Send, Share } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import DeleteThread from "../forms/DeleteThread";
 import LikeButton from "../shared/LikeButton";
 
 interface Props {
@@ -25,7 +26,7 @@ interface Props {
       image: string;
     };
   }[];
-  likes?: { likedBy: string }[];
+  likes: { likedBy: string }[];
   isComment?: boolean;
 }
 
@@ -63,20 +64,25 @@ const ThreadCard = ({
           </div>
 
           <div className="flex w-full flex-col">
-            <Link href={`/profile/${author.id}`} className="w-fit">
-              <h4 className="cursor-pointer text-base-semibold text-light-1">
-                {author.name}
-              </h4>
-            </Link>
+            <div className="flex items-end gap-5">
+              <Link href={`/profile/${author.id}`} className="w-fit">
+                <h4 className="cursor-pointer text-base-semibold text-light-1">
+                  {author.name}
+                </h4>
+              </Link>
+              <p className="text-subtle-medium text-gray-1 py-[0.12rem]">
+                {formatDateString(createdAt)}{" "}
+                {community && " - Comunidad " + community.name}
+              </p>
+            </div>
 
             <p className="mt-2 text-small-regular text-light-2">{content}</p>
 
-            <div className={`${isComment && "mb-10"} mt-5 flex flex-col gap-3`}>
+            <div className={`${isComment && "mb-7"} mt-5 flex flex-col gap-3`}>
               <div className="flex gap-3.5">
                 <LikeButton
                   threadId={JSON.stringify(id)}
-                  userId={author.id}
-                  likes={likes ? likes.length : 0}
+                  userId={JSON.stringify(currentUserId)}
                 />
 
                 <Link href={`/thread/${id}`}>
@@ -94,41 +100,44 @@ const ThreadCard = ({
                 </span>
               </div>
 
-              {
-                // isComment &&
-                comments.length > 0 && (
-                  <Link href={`/thread/${id}`}>
-                    <p className="mt-1 text-subtle-medium text-gray-1">
-                      {comments.length} comentario{comments.length > 1 && "s"}
-                    </p>
-                  </Link>
-                )
-              }
+              {(comments.length > 0 || likes.length > 0) && (
+                <Link href={`/thread/${id}`}>
+                  <p className="mt-1 text-subtle-medium text-gray-1">
+                    {comments.length > 0 && comments.length + " comentario"}
+                    {comments.length > 1 && "s"}
+                    {comments.length > 0 && likes.length > 0 && " - "}
+                    {likes.length > 0 && likes.length + " me gusta"}
+                  </p>
+                </Link>
+              )}
+              {community && (
+                <Link
+                  href={`/communities/${community.id}`}
+                  className="flex items-center gap-2"
+                >
+                  <Image
+                    src={community.image}
+                    alt={community.name}
+                    width={14}
+                    height={14}
+                    className="rounded-full"
+                  />
+                  <p className="text-subtle-medium text-gray-1 py-1">
+                    {community && "Comunidad " + community.name}
+                  </p>
+                </Link>
+              )}
             </div>
           </div>
         </div>
+        <DeleteThread
+          threadId={JSON.stringify(id)}
+          currentUserId={JSON.stringify(currentUserId)}
+          authorId={author.id}
+          parentId={parentId}
+          isComment={isComment}
+        />
       </div>
-      {!isComment && (
-        <Link
-          href={community ? `/communities/${community.id}` : `/thread/${id}`}
-          className="mt-5 flex items-center"
-        >
-          <p className="text-subtle-medium text-gray-1">
-            {formatDateString(createdAt)}{" "}
-            {community && " - Comunidad " + community.name}
-          </p>
-
-          {community && (
-            <Image
-              src={community.image}
-              alt={community.name}
-              width={14}
-              height={14}
-              className="ml-1 rounded-full object-cover"
-            />
-          )}
-        </Link>
-      )}
     </article>
   );
 };

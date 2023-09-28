@@ -12,11 +12,8 @@ const Page = async ({ params }: { params: { id: string } }) => {
   const user = await currentUser();
   if (!user) return null;
 
-  const userInfo = await fetchUser(params.id);
-  if (!userInfo?.onboarded) redirect("/onboarding");
-
   const communityDetails = await fetchCommunityDetails(params.id);
-
+console.log("communityDetails?.threads: ", communityDetails?.threads)
   return (
     <section>
       {/* @ts-ignore */}
@@ -56,7 +53,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
           <TabsContent value="threads" className="w-full text-light-1">
             {/* @ts-ignore */}
             <ThreadsTab
-              currentUserId={JSON.stringify(userInfo._id)}
+              currentUserId={user.id}
               accountId={communityDetails?._id}
               accountType="Community"
             />

@@ -22,7 +22,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
         <ThreadCard
           key={post._id}
           id={post._id}
-          currentUserId={JSON.stringify(userInfo._id)}
+          currentUserId={user.id}
           parentId={post.parentId}
           content={post.text}
           author={post.author}
@@ -46,13 +46,14 @@ const Page = async ({ params }: { params: { id: string } }) => {
           <ThreadCard
             key={childItem._id}
             id={childItem._id}
-            currentUserId={JSON.stringify(userInfo._id)}
+            currentUserId={user.id}
             parentId={childItem.parentId}
             content={childItem.text}
             author={childItem.author}
             community={childItem.community}
             createdAt={childItem.createdAt}
             comments={childItem.children}
+            likes={childItem.likes}
             isComment
           />
         ))}

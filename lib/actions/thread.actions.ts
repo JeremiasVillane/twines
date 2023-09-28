@@ -6,6 +6,7 @@ import User from "../models/user.model";
 import Community from "../models/community.model";
 import { connectToDB } from "../mongoose";
 import Like from "../models/like.model";
+import { ObjectId } from "mongoose";
 
 interface Params {
   text: string;
@@ -142,7 +143,9 @@ export async function deletePost(id: string, path: string): Promise<void> {
   try {
     connectToDB();
 
-    const mainThread = await Thread.findById(id).populate("author community");
+    const mainThread = await Thread.findById(id).populate(
+      "author community likes"
+    );
 
     if (!mainThread) {
       throw new Error("Post not found");
@@ -169,6 +172,13 @@ export async function deletePost(id: string, path: string): Promise<void> {
       ].filter((id) => id !== undefined)
     );
 
+    const likeIds = [
+      ...mainThread.likes.map((like: any) => like?._id?.toString()),
+      ...descendantThreads.map((thread) =>
+        thread.likes?.map((like: any) => like?._id?.toString())
+      ),
+    ];
+
     await Thread.deleteMany({ _id: { $in: descendantThreadIds } });
 
     await User.updateMany(
@@ -180,6 +190,8 @@ export async function deletePost(id: string, path: string): Promise<void> {
       { _id: { $in: Array.from(uniqueCommunityIds) } },
       { $pull: { threads: { $in: descendantThreadIds } } }
     );
+
+    await Like.deleteMany({ _id: { $in: likeIds } });
 
     revalidatePath(path);
   } catch (error: any) {
@@ -240,6 +252,7 @@ export async function likePost(threadId: string, userId: string, path: string) {
         (like: { likedBy: { toString: () => string } }) =>
           like.likedBy.toString()
       );
+
       const isCurrentUserAlreadyLiked = likedByUsers.includes(
         currentUser._id.toString()
       );
@@ -261,14 +274,25 @@ export async function likePost(threadId: string, userId: string, path: string) {
 
         if (likeIndexToRemove !== -1) {
           threadToLike.likes.splice(likeIndexToRemove, 1);
-          currentUser.likedPosts.splice(likeIndexToRemove, 1);
         }
 
-        const currentUserLikeInPost = likeDocuments.find(
+        const currentUserLikedPost = likeDocuments.find(
           (like) => like.likedBy.toString() === currentUser._id.toString()
         );
 
-        await Like.findByIdAndDelete(currentUserLikeInPost);
+        const likedPostIndexToRemove = currentUser.likedPosts.findIndex(
+          (id: ObjectId) => id.toString() === currentUserLikedPost.postId.toString()
+        );
+
+        if (likedPostIndexToRemove !== -1) {
+          currentUser.likedPosts.splice(likedPostIndexToRemove, 1);
+        }
+
+        const currentUserLike = likeDocuments.find(
+          (like) => like.likedBy.toString() === currentUser._id.toString()
+        );
+        
+        await Like.findByIdAndDelete(currentUserLike);
       }
     } else {
       const like = new Like({

@@ -71,7 +71,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
           <TabsContent value="favs" className="w-full text-light-1">
             {/* @ts-ignore */}
             <ThreadsTab
-              currentUserId={userInfo._id}
+              currentUserId={user.id}
               accountId={userInfo.id}
               accountType="User"
               data="Favoritos"

@@ -65,6 +65,7 @@ const Comment = ({ threadId, currentUserImg, currentUserId }: Props) => {
                 <Input
                   type="text"
                   placeholder="Escribe tu comentario..."
+                  autoComplete="off"
                   className="no-focus text-light-1 outline-none"
                   {...field}
                 />

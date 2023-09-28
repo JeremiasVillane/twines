@@ -154,43 +154,40 @@ export async function getActivity(userId: string) {
   }
 }
 
-export async function getLikedPostsByUser(userId: string) {
+export async function getLikedPostsByUser(accountId: string) {
   try {
     connectToDB();
 
-    const user = await User.findOne({id: userId});
+    const { likedPosts } = await User.findOne({ id: accountId });
+    const postsLikedByUser = await Thread.find({ _id: { $in: likedPosts } }).populate({
+      path: "author",
+    })
+console.log("postsLikedByUser: ", postsLikedByUser)
 
-    if (!user) {
-      throw new Error("User not found");
-    }
+    return postsLikedByUser;
+    // const userWithPosts = await User.findOne({ id: accountId }).populate({
+    //   path: "threads",
+    //   populate: [
+    //     {
+    //       path: "community",
+    //       model: Community,
+    //       select: "name id image _id",
+    //     },
+    //     {
+    //       path: "children",
+    //       model: Thread,
+    //       populate: {
+    //         path: "author",
+    //         model: User,
+    //         select: "name image id",
+    //       },
+    //     },
+    //   ],
+    // });
 
-    const userWithPosts = await User.findOne({id: userId}).populate({
-      path: "threads",
-      populate: [
-        {
-          path: "community",
-          model: Community,
-          select: "name id image _id",
-        },
-        {
-          path: "children",
-          model: Thread,
-          populate: {
-            path: "author",
-            model: User,
-            select: "name image id",
-          },
-        },
-      ],
-    });
+    // userWithPosts.threads = postsLikedByUser || [];
 
-    const likedThreads = userWithPosts?.threads?.filter((thread: any): any => {
-      return user?.likedPosts?.includes(thread._id.toString());
-    });
-
-    userWithPosts.threads = likedThreads || [];
-console.log("userWithPosts: ", userWithPosts)
-    return userWithPosts;
+    // return userWithPosts;
   } catch (error: any) {
     throw new Error(`Failed to fetch liked posts: ${error.message}`);
   }
