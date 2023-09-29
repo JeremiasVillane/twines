@@ -1,8 +1,9 @@
+import { isLiked } from "@/lib/actions/thread.actions";
 import { formatDateString } from "@/lib/utils";
-import { Forward, MessageSquare, Repeat2, Send, Share } from "lucide-react";
+import { Forward, MessageSquare, Repeat2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import DeleteThread from "../forms/DeleteThread";
+import DeleteButton from "../shared/DeleteButton";
 import LikeButton from "../shared/LikeButton";
 
 interface Props {
@@ -30,7 +31,7 @@ interface Props {
   isComment?: boolean;
 }
 
-const ThreadCard = ({
+const ThreadCard = async ({
   id,
   currentUserId,
   parentId,
@@ -42,6 +43,8 @@ const ThreadCard = ({
   likes,
   isComment,
 }: Props) => {
+  const liked = await isLiked(id, currentUserId);
+
   return (
     <article
       className={`flex w-full flex-col rounded-xl ${
@@ -83,6 +86,7 @@ const ThreadCard = ({
                 <LikeButton
                   threadId={JSON.stringify(id)}
                   userId={JSON.stringify(currentUserId)}
+                  liked={liked}
                 />
 
                 <Link href={`/thread/${id}`}>
@@ -130,7 +134,7 @@ const ThreadCard = ({
             </div>
           </div>
         </div>
-        <DeleteThread
+        <DeleteButton
           threadId={JSON.stringify(id)}
           currentUserId={JSON.stringify(currentUserId)}
           authorId={author.id}

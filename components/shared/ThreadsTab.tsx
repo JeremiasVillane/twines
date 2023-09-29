@@ -89,44 +89,50 @@ const ThreadsTab = async ({
     <section className="mt-9 flex flex-col gap-10">
       {data === "Favoritos"
         ? result.map((post: any) => (
-            <ThreadCard
-              key={post._id}
-              id={post._id}
-              currentUserId={currentUserId}
-              parentId={post.parentId}
-              content={post.text}
-              author={{
-                name: post.author.name,
-                image: post.author.image,
-                id: post.author.id,
-              }}
-              community={post.community}
-              createdAt={post.createdAt}
-              comments={post.children}
-              likes={post.likes}
-            />
+            <>
+              {/* @ts-ignore */}
+              <ThreadCard
+                key={post._id}
+                id={post._id}
+                currentUserId={currentUserId}
+                parentId={post.parentId}
+                content={post.text}
+                author={{
+                  name: post.author.name,
+                  image: post.author.image,
+                  id: post.author.id,
+                }}
+                community={post.community}
+                createdAt={post.createdAt}
+                comments={post.children}
+                likes={post.likes}
+              />
+            </>
           ))
         : result.threads.map((thread: any) => (
-            <ThreadCard
-              key={thread._id}
-              id={thread._id}
-              currentUserId={currentUserId}
-              parentId={thread.parentId}
-              content={thread.text}
-              author={
-                accountType === "User"
-                  ? { name: result.name, image: result.image, id: result.id }
-                  : {
-                      name: thread.author.name,
-                      image: thread.author.image,
-                      id: thread.author.id,
-                    }
-              }
-              community={thread.community}
-              createdAt={thread.createdAt}
-              comments={thread.children}
-              likes={thread.likes}
-            />
+            <>
+              {/* @ts-ignore */}
+              <ThreadCard
+                key={thread._id}
+                id={thread._id}
+                currentUserId={currentUserId}
+                parentId={thread.parentId}
+                content={thread.text}
+                author={
+                  accountType === "User"
+                    ? { name: result.name, image: result.image, id: result.id }
+                    : {
+                        name: thread.author.name,
+                        image: thread.author.image,
+                        id: thread.author.id,
+                      }
+                }
+                community={thread.community}
+                createdAt={thread.createdAt}
+                comments={thread.children}
+                likes={thread.likes}
+              />
+            </>
           ))}
     </section>
   );

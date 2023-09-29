@@ -159,35 +159,13 @@ export async function getLikedPostsByUser(accountId: string) {
     connectToDB();
 
     const { likedPosts } = await User.findOne({ id: accountId });
-    const postsLikedByUser = await Thread.find({ _id: { $in: likedPosts } }).populate({
+    const postsLikedByUser = await Thread.find({
+      _id: { $in: likedPosts },
+    }).populate({
       path: "author",
-    })
-console.log("postsLikedByUser: ", postsLikedByUser)
+    });
 
     return postsLikedByUser;
-    // const userWithPosts = await User.findOne({ id: accountId }).populate({
-    //   path: "threads",
-    //   populate: [
-    //     {
-    //       path: "community",
-    //       model: Community,
-    //       select: "name id image _id",
-    //     },
-    //     {
-    //       path: "children",
-    //       model: Thread,
-    //       populate: {
-    //         path: "author",
-    //         model: User,
-    //         select: "name image id",
-    //       },
-    //     },
-    //   ],
-    // });
-
-    // userWithPosts.threads = postsLikedByUser || [];
-
-    // return userWithPosts;
   } catch (error: any) {
     throw new Error(`Failed to fetch liked posts: ${error.message}`);
   }

@@ -281,7 +281,8 @@ export async function likePost(threadId: string, userId: string, path: string) {
         );
 
         const likedPostIndexToRemove = currentUser.likedPosts.findIndex(
-          (id: ObjectId) => id.toString() === currentUserLikedPost.postId.toString()
+          (id: ObjectId) =>
+            id.toString() === currentUserLikedPost.postId.toString()
         );
 
         if (likedPostIndexToRemove !== -1) {
@@ -291,7 +292,7 @@ export async function likePost(threadId: string, userId: string, path: string) {
         const currentUserLike = likeDocuments.find(
           (like) => like.likedBy.toString() === currentUser._id.toString()
         );
-        
+
         await Like.findByIdAndDelete(currentUserLike);
       }
     } else {
@@ -312,5 +313,37 @@ export async function likePost(threadId: string, userId: string, path: string) {
     revalidatePath(path);
   } catch (error: any) {
     throw new Error(`Error liking post: ${error.message}`);
+  }
+}
+
+export async function isLiked(threadId: string, userId: string) {
+  try {
+    connectToDB();
+
+    const threadToLike = await Thread.findById(threadId);
+    const currentUser = await User.findOne({ id: userId });
+
+    const { likes } = threadToLike;
+
+    if (likes.length < 1) {
+      return false;
+    } else {
+      const likesFromDB = await Like.find({ _id: { $in: likes } });
+
+      const likedByUsers: string[] = likesFromDB.map(
+        (like: { likedBy: { toString: () => string } }) =>
+          like.likedBy.toString()
+      );
+
+      const isCurrentUserAlreadyLiked = likedByUsers.includes(
+        currentUser._id.toString()
+      );
+
+      if (isCurrentUserAlreadyLiked) {
+        return true;
+      } else return false;
+    }
+  } catch (error: any) {
+    throw new Error(`Failed to check like status: ${error.message}`);
   }
 }
