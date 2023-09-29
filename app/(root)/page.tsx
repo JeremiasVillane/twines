@@ -23,7 +23,7 @@ export default async function Home() {
           <>
             {result.posts.map((post) => (
               <>
-                {/* @ts-ignore */}
+                {/* @ts-expect-error Async Server Component */}
                 <ThreadCard
                   key={post._id}
                   id={post._id}

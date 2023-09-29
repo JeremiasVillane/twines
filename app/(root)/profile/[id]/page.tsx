@@ -15,7 +15,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
 
   return (
     <section>
-      {/* @ts-ignore */}
+      {/* @ts-expect-error Async Server Component */}
       <ProfileHeader
         accountId={userInfo.id}
         authUserId={user.id}
@@ -49,7 +49,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
           </TabsList>
 
           <TabsContent value="threads" className="w-full text-light-1">
-            {/* @ts-ignore */}
+            {/* @ts-expect-error Async Server Component */}
             <ThreadsTab
               currentUserId={user.id}
               accountId={userInfo.id}
@@ -59,7 +59,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
           </TabsContent>
 
           <TabsContent value="replies" className="w-full text-light-1">
-            {/* @ts-ignore */}
+            {/* @ts-expect-error Async Server Component */}
             <ThreadsTab
               currentUserId={user.id}
               accountId={userInfo.id}
@@ -69,7 +69,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
           </TabsContent>
 
           <TabsContent value="favs" className="w-full text-light-1">
-            {/* @ts-ignore */}
+            {/* @ts-expect-error Async Server Component */}
             <ThreadsTab
               currentUserId={user.id}
               accountId={userInfo.id}

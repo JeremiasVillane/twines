@@ -4,9 +4,7 @@ import ThreadsTab from "@/components/shared/ThreadsTab";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { communityTabs } from "@/constants";
 import { fetchCommunityDetails } from "@/lib/actions/community.actions";
-import { fetchUser } from "@/lib/actions/user.actions";
 import { currentUser } from "@clerk/nextjs";
-import { redirect } from "next/navigation";
 
 const Page = async ({ params }: { params: { id: string } }) => {
   const user = await currentUser();
@@ -16,7 +14,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
 
   return (
     <section>
-      {/* @ts-ignore */}
+      {/* @ts-expect-error Async Server Component */}
       <ProfileHeader
         accountId={communityDetails?.id}
         authUserId={user.id}
@@ -51,7 +49,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
           </TabsList>
 
           <TabsContent value="threads" className="w-full text-light-1">
-            {/* @ts-ignore */}
+            {/* @ts-expect-error Async Server Component */}
             <ThreadsTab
               currentUserId={user.id}
               accountId={communityDetails?._id}
@@ -76,7 +74,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
           </TabsContent>
 
           <TabsContent value="requests" className="w-full text-light-1">
-            {/* @ts-ignore */}
+            {/* @ts-expect-error Async Server Component */}
             <ThreadsTab
               currentUserId={user.id}
               accountId={communityDetails?._id}

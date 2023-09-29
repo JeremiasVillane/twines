@@ -19,7 +19,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
   return (
     <section className="relative">
       <div>
-        {/* @ts-ignore */}
+        {/* @ts-expect-error Async Server Component */}
         <ThreadCard
           key={post._id}
           id={post._id}
@@ -45,7 +45,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
       <div className="mt-10">
         {post.children.map((childItem: any) => (
           <>
-            {/* @ts-ignore */}
+            {/* @ts-expect-error Async Server Component */}
             <ThreadCard
               key={childItem._id}
               id={childItem._id}

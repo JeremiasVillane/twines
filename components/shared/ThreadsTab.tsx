@@ -3,60 +3,7 @@ import {
   fetchUserPosts,
   getLikedPostsByUser,
 } from "@/lib/actions/user.actions";
-import { redirect } from "next/navigation";
 import ThreadCard from "../cards/ThreadCard";
-
-interface Result1 {
-  name: string;
-  image: string;
-  id: string;
-  threads: {
-    _id: string;
-    text: string;
-    parentId: string | null;
-    author: {
-      name: string;
-      image: string;
-      id: string;
-    };
-    community: {
-      id: string;
-      name: string;
-      image: string;
-    } | null;
-    createdAt: string;
-    children: {
-      author: {
-        image: string;
-      };
-    }[];
-  }[];
-}
-
-interface Result2 {
-  text: string;
-  author: {
-    _id: string;
-    id: string;
-    bio: string;
-    image: string;
-    name: string;
-    username: string;
-  };
-  community: {
-    id: string;
-    name: string;
-    image: string;
-  } | null;
-  children: {
-    author: {
-      image: string;
-    };
-  }[];
-  likes: string[];
-  createdAt: string;
-}
-[];
 
 interface Props {
   currentUserId: string;
@@ -83,14 +30,12 @@ const ThreadsTab = async ({
     mainposts = await fetchCommunityPosts(accountId);
   }
 
-  // if (!result) redirect("/");
-
   return (
     <section className="mt-9 flex flex-col gap-10">
       {data === "Favoritos"
         ? favourites.map((post: any) => (
             <>
-              {/* @ts-ignore */}
+              {/* @ts-expect-error Async Server Component */}
               <ThreadCard
                 key={post._id}
                 id={post._id}
@@ -112,7 +57,7 @@ const ThreadsTab = async ({
         : data === "Publicaciones"
         ? mainposts.threads.map((thread: any) => (
             <>
-              {/* @ts-ignore */}
+              {/* @ts-expect-error Async Server Component */}
               <ThreadCard
                 key={thread._id}
                 id={thread._id}
@@ -121,7 +66,11 @@ const ThreadsTab = async ({
                 content={thread.text}
                 author={
                   accountType === "User"
-                    ? { name: mainposts.name, image: mainposts.image, id: mainposts.id }
+                    ? {
+                        name: mainposts.name,
+                        image: mainposts.image,
+                        id: mainposts.id,
+                      }
                     : {
                         name: thread.author.name,
                         image: thread.author.image,
@@ -137,7 +86,7 @@ const ThreadsTab = async ({
           ))
         : comments.threads.map((thread: any) => (
             <>
-              {/* @ts-ignore */}
+              {/* @ts-expect-error Async Server Component */}
               <ThreadCard
                 key={thread._id}
                 id={thread._id}
@@ -146,7 +95,11 @@ const ThreadsTab = async ({
                 content={thread.text}
                 author={
                   accountType === "User"
-                    ? { name: comments.name, image: comments.image, id: comments.id }
+                    ? {
+                        name: comments.name,
+                        image: comments.image,
+                        id: comments.id,
+                      }
                     : {
                         name: thread.author.name,
                         image: thread.author.image,
