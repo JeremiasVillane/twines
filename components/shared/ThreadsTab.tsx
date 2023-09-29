@@ -71,16 +71,16 @@ const ThreadsTab = async ({
   accountType,
   data,
 }: Props) => {
-  let result: any;
+  let mainposts: any;
+  let comments: any;
+  let favourites: any;
 
   if (accountType === "User") {
-    if (data === "Publicaciones") {
-      result = await fetchUserPosts(accountId);
-    } else if (data === "Favoritos") {
-      result = await getLikedPostsByUser(accountId);
-    } else result = await fetchUserPosts(accountId);
+    mainposts = await fetchUserPosts(accountId, "mainposts");
+    comments = await fetchUserPosts(accountId, "comments");
+    favourites = await getLikedPostsByUser(accountId);
   } else {
-    result = await fetchCommunityPosts(accountId);
+    mainposts = await fetchCommunityPosts(accountId);
   }
 
   // if (!result) redirect("/");
@@ -88,7 +88,7 @@ const ThreadsTab = async ({
   return (
     <section className="mt-9 flex flex-col gap-10">
       {data === "Favoritos"
-        ? result.map((post: any) => (
+        ? favourites.map((post: any) => (
             <>
               {/* @ts-ignore */}
               <ThreadCard
@@ -109,7 +109,8 @@ const ThreadsTab = async ({
               />
             </>
           ))
-        : result.threads.map((thread: any) => (
+        : data === "Publicaciones"
+        ? mainposts.threads.map((thread: any) => (
             <>
               {/* @ts-ignore */}
               <ThreadCard
@@ -120,7 +121,32 @@ const ThreadsTab = async ({
                 content={thread.text}
                 author={
                   accountType === "User"
-                    ? { name: result.name, image: result.image, id: result.id }
+                    ? { name: mainposts.name, image: mainposts.image, id: mainposts.id }
+                    : {
+                        name: thread.author.name,
+                        image: thread.author.image,
+                        id: thread.author.id,
+                      }
+                }
+                community={thread.community}
+                createdAt={thread.createdAt}
+                comments={thread.children}
+                likes={thread.likes}
+              />
+            </>
+          ))
+        : comments.threads.map((thread: any) => (
+            <>
+              {/* @ts-ignore */}
+              <ThreadCard
+                key={thread._id}
+                id={thread._id}
+                currentUserId={currentUserId}
+                parentId={thread.parentId}
+                content={thread.text}
+                author={
+                  accountType === "User"
+                    ? { name: comments.name, image: comments.image, id: comments.id }
                     : {
                         name: thread.author.name,
                         image: thread.author.image,

@@ -53,7 +53,7 @@ function PostThread({ userId }: { userId: string }) {
           name="thread"
           render={({ field }) => (
             <FormItem className="flex flex-col w-full gap-3">
-              <FormLabel className="text-base-semibold text-light-2">
+              <FormLabel className="text-base-semibold text-light-2 select-none">
                 Contenido
               </FormLabel>
               <FormControl className="no-focus border border-dark-4 bg-dark-3 text-light-1">
@@ -63,7 +63,7 @@ function PostThread({ userId }: { userId: string }) {
             </FormItem>
           )}
         />
-        <Button type="submit" className="bg-primary-500">
+        <Button type="submit" className="bg-primary-500 select-none">
           Publicar
         </Button>
       </form>

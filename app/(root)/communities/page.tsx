@@ -25,7 +25,7 @@ async function Page({
 
   return (
     <>
-      <h1 className="head-text mb-10">Comunidades</h1>
+      <h1 className="head-text mb-10 select-none">Comunidades</h1>
 
       <Searchbar routeType="communities" />
 

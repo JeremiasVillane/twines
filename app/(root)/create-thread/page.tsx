@@ -12,7 +12,7 @@ async function Page() {
 
   return (
     <>
-      <h1 className="head-text">Nueva publicación</h1>
+      <h1 className="head-text select-none">Nueva publicación</h1>
 
       <PostThread userId={userInfo._id} />
     </>

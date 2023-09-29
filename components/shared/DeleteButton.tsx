@@ -1,8 +1,6 @@
 "use client";
 
-import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-
 import { deletePost } from "@/lib/actions/thread.actions";
 import { Trash2 } from "lucide-react";
 

@@ -54,11 +54,11 @@ export async function fetchUser(userId: string) {
   }
 }
 
-export async function fetchUserPosts(userId: string) {
+export async function fetchUserPosts(userId: string, type: string) {
   try {
     connectToDB();
 
-    const threads = await User.findOne({ id: userId }).populate({
+    const threadsQuery = User.findOne({ id: userId }).populate({
       path: "threads",
       populate: [
         {
@@ -78,7 +78,19 @@ export async function fetchUserPosts(userId: string) {
       ],
     });
 
-    return threads;
+    const userWithThreads = await threadsQuery.exec();
+
+    const filteredThreads = userWithThreads.threads.filter((thread: any) =>
+      type === "mainposts"
+        ? [null, undefined].includes(thread.parentId)
+        : ![null, undefined].includes(thread.parentId)
+    );
+
+    userWithThreads.threads = filteredThreads.sort(
+      (a: any, b: any) => b.createdAt - a.createdAt
+    );
+
+    return userWithThreads;
   } catch (error: any) {
     throw new Error(`Failed to fetch user posts: ${error.message}`);
   }

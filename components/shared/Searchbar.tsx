@@ -29,7 +29,7 @@ function Searchbar({ routeType }: Props) {
               ? "Buscar usuarios..."
               : "Buscar comunidades..."
           }`}
-          className="no-focus searchbar_input"
+          className="no-focus searchbar_input select-none"
         />
       </div>
     </section>

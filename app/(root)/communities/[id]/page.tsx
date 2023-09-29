@@ -56,6 +56,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
               currentUserId={user.id}
               accountId={communityDetails?._id}
               accountType="Community"
+              data="Publicaciones"
             />
           </TabsContent>
 
@@ -80,6 +81,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
               currentUserId={user.id}
               accountId={communityDetails?._id}
               accountType="Community"
+              data="Publicaciones"
             />
           </TabsContent>
         </Tabs>

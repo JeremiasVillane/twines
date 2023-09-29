@@ -22,7 +22,7 @@ const UserCard = ({ id, name, username, imgUrl, personType }: Props) => {
           alt="logo"
           width={48}
           height={48}
-          className="rounded-full"
+          className="rounded-full select-none"
         />
 
         <div className="flex-1 text-ellipsis">
@@ -32,7 +32,7 @@ const UserCard = ({ id, name, username, imgUrl, personType }: Props) => {
       </div>
 
       <Button
-        className="user-card_btn"
+        className="user-card_btn select-none"
         onClick={() => router.push(`/profile/${id}`)}
       >
         Ver

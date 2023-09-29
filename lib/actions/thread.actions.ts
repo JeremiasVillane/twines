@@ -209,6 +209,8 @@ export async function addCommentToPost(
 
   try {
     const originalThread = await Thread.findById(threadId);
+    const currentUser = await User.findById(userId);
+    
     if (!originalThread) {
       throw new Error("Post not found");
     }
@@ -222,8 +224,10 @@ export async function addCommentToPost(
     const savedCommentThread = await commentThread.save();
 
     originalThread.children.push(savedCommentThread._id);
-
     await originalThread.save();
+
+    currentUser.threads.push(savedCommentThread._id);
+    await currentUser.save();
 
     revalidatePath(path);
   } catch (error: any) {

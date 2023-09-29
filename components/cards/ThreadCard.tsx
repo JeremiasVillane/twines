@@ -53,7 +53,7 @@ const ThreadCard = async ({
     >
       <div className="flex items-start justify-between">
         <div className="flex w-full flex-1 flex-row gap-4">
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center select-none">
             <Link href={`/profile/${author.id}`} className="relative h-11 w-11">
               <Image
                 src={author.image}
@@ -67,15 +67,17 @@ const ThreadCard = async ({
           </div>
 
           <div className="flex w-full flex-col">
-            <div className="flex items-end gap-5">
+            <div className="flex content-between items-end gap-5">
               <Link href={`/profile/${author.id}`} className="w-fit">
                 <h4 className="cursor-pointer text-base-semibold text-light-1">
                   {author.name}
                 </h4>
               </Link>
-              <p className="text-subtle-medium text-gray-1 py-[0.12rem]">
-                {formatDateString(createdAt)}{" "}
-                {community && " - Comunidad " + community.name}
+              <p
+                className="text-subtle-medium text-gray-1 py-[0.12rem] select-none cursor-default"
+                title={formatDateString(createdAt, "long")}
+              >
+                {formatDateString(createdAt, "short")}
               </p>
             </div>
 
@@ -95,7 +97,7 @@ const ThreadCard = async ({
                   </span>
                 </Link>
 
-                <span title="RePublicar">
+                <span title="Republicar">
                   <Repeat2 strokeWidth={1.5} color="rgb(92 92 123)" />
                 </span>
 
@@ -104,13 +106,13 @@ const ThreadCard = async ({
                 </span>
               </div>
 
-              {(comments.length > 0 || likes.length > 0) && (
+              {(comments || likes) && (
                 <Link href={`/thread/${id}`}>
-                  <p className="mt-1 text-subtle-medium text-gray-1">
-                    {comments.length > 0 && comments.length + " comentario"}
-                    {comments.length > 1 && "s"}
-                    {comments.length > 0 && likes.length > 0 && " - "}
-                    {likes.length > 0 && likes.length + " me gusta"}
+                  <p className="mt-1 text-subtle-medium text-gray-1 select-none">
+                    {comments?.length > 0 && comments?.length + " comentario"}
+                    {comments?.length > 1 && "s"}
+                    {comments?.length > 0 && likes?.length > 0 && " - "}
+                    {likes?.length > 0 && likes?.length + " me gusta"}
                   </p>
                 </Link>
               )}
@@ -126,7 +128,7 @@ const ThreadCard = async ({
                     height={14}
                     className="rounded-full"
                   />
-                  <p className="text-subtle-medium text-gray-1 py-1">
+                  <p className="text-subtle-medium text-gray-1 self-end">
                     {community && "Comunidad " + community.name}
                   </p>
                 </Link>

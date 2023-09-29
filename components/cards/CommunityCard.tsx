@@ -18,7 +18,7 @@ function CommunityCard({ id, name, username, imgUrl, bio, members }: Props) {
   return (
     <article className="community-card">
       <div className="flex flex-wrap items-center gap-3">
-        <Link href={`/communities/${id}`} className="relative h-12 w-12">
+        <Link href={`/communities/${id}`} className="relative h-12 w-12 select-none">
           <Image
             src={imgUrl}
             alt="community_logo"
@@ -39,13 +39,13 @@ function CommunityCard({ id, name, username, imgUrl, bio, members }: Props) {
 
       <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
         <Link href={`/communities/${id}`}>
-          <Button size="sm" className="community-card_btn">
+          <Button size="sm" className="community-card_btn select-none">
             Ver
           </Button>
         </Link>
 
         {members.length > 0 && (
-          <div className="flex items-center">
+          <div className="flex items-center select-none">
             {members.map((member, index) => (
               <Image
                 key={index}

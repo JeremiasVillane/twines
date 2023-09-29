@@ -13,7 +13,7 @@ const Page = async () => {
 
   const activity = await getActivity(userInfo._id);
   return (
-    <section>
+    <section className="select-none">
       <h1 className="head-text mb-10">Actividad</h1>
 
       <section className="mt-10 flex flex-col gap-5">

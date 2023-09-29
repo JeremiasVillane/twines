@@ -28,7 +28,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
 
       <div className="mt-9">
         <Tabs defaultValue="threads" className="w-full">
-          <TabsList className="tab">
+          <TabsList className="tab select-none">
             {profileTabs.map((tab) => (
               <TabsTrigger key={tab.label} value={tab.value} className="tab">
                 <div
@@ -39,11 +39,11 @@ const Page = async ({ params }: { params: { id: string } }) => {
                 </div>
                 <p className="max-sm:hidden">{tab.label}</p>
 
-                {tab.label === "Publicaciones" && (
+                {/* {tab.label === "Publicaciones" && (
                   <p className="l-1 rounded-sm bg-light-4 px-2 py-1 !text-tiny-medium text-light-2">
                     {userInfo?.threads?.length}
                   </p>
-                )}
+                )} */}
               </TabsTrigger>
             ))}
           </TabsList>
@@ -64,7 +64,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
               currentUserId={user.id}
               accountId={userInfo.id}
               accountType="User"
-              data="Publicaciones"
+              data="Comentarios"
             />
           </TabsContent>
 
