@@ -14,7 +14,7 @@ async function Page() {
     <>
       <h1 className="head-text select-none">Nueva publicación</h1>
 
-      <PostThread userId={userInfo._id} />
+      <PostThread userId={JSON.stringify(userInfo._id)} />
     </>
   );
 }

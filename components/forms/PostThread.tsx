@@ -27,14 +27,14 @@ function PostThread({ userId }: { userId: string }) {
     resolver: zodResolver(ThreadValidation),
     defaultValues: {
       thread: "",
-      accountId: userId,
+      accountId: JSON.parse(userId),
     },
   });
 
   const onSubmit = async (values: z.infer<typeof ThreadValidation>) => {
     await createPost({
       text: values.thread,
-      author: userId,
+      author: JSON.parse(userId),
       communityId: organization ? organization.id : null,
       path: pathname,
     });

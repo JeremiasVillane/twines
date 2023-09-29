@@ -1,4 +1,7 @@
 import { isLiked } from "@/lib/actions/thread.actions";
+import Thread from "@/lib/models/thread.model";
+import User from "@/lib/models/user.model";
+import { connectToDB } from "@/lib/mongoose";
 import { formatDateString } from "@/lib/utils";
 import { Forward, MessageSquare, Repeat2 } from "lucide-react";
 import Image from "next/image";
@@ -51,6 +54,11 @@ const ThreadCard = async ({
         isComment ? "px-0 xs:px-7" : "bg-dark-2 p-7"
       }`}
     >
+      {/* {!isComment && parentId && (
+        <span>
+          En respuesta a
+        </span>
+      )} */}
       <div className="flex items-start justify-between">
         <div className="flex w-full flex-1 flex-row gap-4">
           <div className="flex flex-col items-center select-none">
@@ -69,8 +77,11 @@ const ThreadCard = async ({
           <div className="flex w-full flex-col">
             <div className="flex content-between items-end gap-5">
               <Link href={`/profile/${author.id}`} className="w-fit">
-                <h4 className="cursor-pointer text-base-semibold text-light-1">
-                  {author.name}
+                <h4
+                  className="cursor-pointer text-base-semibold text-light-1"
+                  title={author.name}
+                >
+                  {author.name.split(" ")[0]}
                 </h4>
               </Link>
               <p
@@ -81,7 +92,9 @@ const ThreadCard = async ({
               </p>
             </div>
 
-            <p className="mt-2 text-small-regular text-light-2">{content}</p>
+            <p className="mt-2 text-small-regular text-light-2 whitespace-pre-line">
+              {content}
+            </p>
 
             <div className={`${isComment && "mb-7"} mt-5 flex flex-col gap-3`}>
               <div className="flex gap-3.5">
