@@ -3,7 +3,7 @@ import {
   fetchUserPosts,
   getLikedPostsByUser,
 } from "@/lib/actions/user.actions";
-import ThreadCard from "../cards/ThreadCard";
+import PostCard from "../cards/PostCard";
 
 interface Props {
   currentUserId: string;
@@ -12,7 +12,7 @@ interface Props {
   data: string;
 }
 
-const ThreadsTab = async ({
+const PostsTab = async ({
   currentUserId,
   accountId,
   accountType,
@@ -36,7 +36,7 @@ const ThreadsTab = async ({
         ? favourites.map((post: any) => (
             <>
               {/* @ts-expect-error Async Server Component */}
-              <ThreadCard
+              <PostCard
                 key={post._id}
                 id={post._id}
                 currentUserId={currentUserId}
@@ -58,7 +58,7 @@ const ThreadsTab = async ({
         ? mainposts.threads.map((thread: any) => (
             <>
               {/* @ts-expect-error Async Server Component */}
-              <ThreadCard
+              <PostCard
                 key={thread._id}
                 id={thread._id}
                 currentUserId={currentUserId}
@@ -87,7 +87,7 @@ const ThreadsTab = async ({
         : comments.threads.map((thread: any) => (
             <>
               {/* @ts-expect-error Async Server Component */}
-              <ThreadCard
+              <PostCard
                 key={thread._id}
                 id={thread._id}
                 currentUserId={currentUserId}
@@ -117,4 +117,4 @@ const ThreadsTab = async ({
   );
 };
 
-export default ThreadsTab;
+export default PostsTab;

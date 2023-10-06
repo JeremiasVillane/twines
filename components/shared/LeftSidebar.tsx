@@ -33,7 +33,7 @@ function LeftSidebar() {
               >
                 {link.icon}
 
-                <p className="text-light-1 max-lg:hidden">{link.label}</p>
+                <p className="text-light-1 max-lg:hidden max">{link.label}</p>
               </div>
             </Link>
           );

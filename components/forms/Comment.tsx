@@ -8,7 +8,7 @@ import {
   FormItem,
   FormLabel,
 } from "@/components/ui/form";
-import { addCommentToPost } from "@/lib/actions/thread.actions";
+import { addCommentToPost } from "@/lib/actions/post.actions";
 import { CommentValidation } from "@/lib/validations/thread";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";

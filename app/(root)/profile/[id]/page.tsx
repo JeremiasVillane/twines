@@ -1,5 +1,5 @@
 import ProfileHeader from "@/components/shared/ProfileHeader";
-import ThreadsTab from "@/components/shared/ThreadsTab";
+import PostsTab from "@/components/shared/PostsTab";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { profileTabs } from "@/constants";
 import { fetchUser } from "@/lib/actions/user.actions";
@@ -38,19 +38,13 @@ const Page = async ({ params }: { params: { id: string } }) => {
                   {tab.icon}
                 </div>
                 <p className="max-sm:hidden">{tab.label}</p>
-
-                {/* {tab.label === "Publicaciones" && (
-                  <p className="l-1 rounded-sm bg-light-4 px-2 py-1 !text-tiny-medium text-light-2">
-                    {userInfo?.threads?.length}
-                  </p>
-                )} */}
               </TabsTrigger>
             ))}
           </TabsList>
 
           <TabsContent value="threads" className="w-full text-light-1">
             {/* @ts-expect-error Async Server Component */}
-            <ThreadsTab
+            <PostsTab
               currentUserId={user.id}
               accountId={userInfo.id}
               accountType="User"
@@ -60,7 +54,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
 
           <TabsContent value="replies" className="w-full text-light-1">
             {/* @ts-expect-error Async Server Component */}
-            <ThreadsTab
+            <PostsTab
               currentUserId={user.id}
               accountId={userInfo.id}
               accountType="User"
@@ -70,7 +64,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
 
           <TabsContent value="favs" className="w-full text-light-1">
             {/* @ts-expect-error Async Server Component */}
-            <ThreadsTab
+            <PostsTab
               currentUserId={user.id}
               accountId={userInfo.id}
               accountType="User"

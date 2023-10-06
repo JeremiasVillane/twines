@@ -116,6 +116,45 @@
   }
 }
 
+/* Estilos para las post cards con texto enriquecido */
+
+.post-content {
+  @apply mt-2 text-small-regular text-light-2;
+}
+
+.post-content a {
+  @apply text-blue underline;
+}
+
+.post-content h1 {
+  display: block;
+  font-size: 2em;
+  margin-top: 0.67em;
+  margin-bottom: 0.67em;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
+  line-height: 2rem;
+}
+
+.post-content h2 {
+  display: block;
+  font-size: 1.5em;
+  margin-top: 0.83em;
+  margin-bottom: 0.83em;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
+}
+
+.post-content pre {
+  @apply bg-[#23241f] text-[#f8f8f2] overflow-visible m-2 p-2 whitespace-pre-line;
+}
+
+.post-content blockquote {
+  @apply border-l-4 border-gray-300 my-5 pt-3 pl-4 text-light-2;
+}
+
 /* Clerk Responsive fix */
 .cl-organizationSwitcherTrigger .cl-userPreview .cl-userPreviewTextContainer {
   @apply max-sm:hidden;
@@ -153,11 +192,11 @@
 
 /* Comment Form */
 .comment-form {
-  @apply mt-10 flex items-center gap-4 border-y border-y-dark-4 py-5 max-xs:flex-col !important;
+  @apply mt-10 flex items-center gap-4 border-y border-y-dark-4 py-5 max-sxs:flex-col !important;
 }
 
 .comment-form_btn {
-  @apply rounded-3xl bg-primary-500 px-8 py-2 !text-small-regular text-light-1 max-xs:w-full !important;
+  @apply rounded-3xl bg-primary-500 px-8 py-2 !text-small-regular text-light-1 max-sxs:w-full !important;
 }
 
 /*:::::: Barra de desplazamiento ::::::*/

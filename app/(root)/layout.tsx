@@ -4,6 +4,7 @@ import RightSidebar from "@/components/shared/RightSidebar";
 import Topbar from "@/components/shared/Topbar";
 import { esES } from "@/lib/localization/es-ES";
 import { ClerkProvider } from "@clerk/nextjs";
+import { Toaster } from "@/components/ui/toaster";
 import { dark } from "@clerk/themes";
 
 import type { Metadata } from "next";
@@ -38,6 +39,7 @@ export default function RootLayout({
 
             <section className="main-container">
               <div className="w-full max-w-4xl">{children}</div>
+              <Toaster />
             </section>
 
             {/* <RightSidebar /> */}

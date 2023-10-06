@@ -1,12 +1,13 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import Thread from "../models/thread.model";
+import Thread from "../models/post.model";
 import User from "../models/user.model";
 import Community from "../models/community.model";
 import { connectToDB } from "../mongoose";
 import Like from "../models/like.model";
 import { ObjectId } from "mongoose";
+import { Post } from "@/types";
 
 interface Params {
   text: string;
@@ -46,43 +47,44 @@ export async function createPost({ text, author, communityId, path }: Params) {
   }
 }
 
-export async function fetchPosts(pageNumber = 1, pageSize = 20) {
-  connectToDB();
+export async function fetchPosts(page: number) {
+  // const perPage = 10;
 
-  const skipAmount = (pageNumber - 1) * pageSize;
+  try {
+    connectToDB();
 
-  const postsQuery = Thread.find({
-    parentId: { $in: [null, undefined] },
-  })
-    .sort({ createdAt: "desc" })
-    .skip(skipAmount)
-    .limit(pageSize)
-    .populate({
-      path: "author",
-      model: User,
+    // const skipAmount = (page - 1) * perPage;
+
+    const postsQuery = Thread.find({
+      parentId: { $in: [null, undefined] },
     })
-    .populate({
-      path: "community",
-      model: Community,
-    })
-    .populate({
-      path: "children",
-      populate: {
+      .sort({ createdAt: "desc" })
+      // .skip(skipAmount)
+      // .limit(perPage)
+      .populate({
         path: "author",
         model: User,
-        select: "_id name parentId image",
-      },
-    });
+      })
+      .populate({
+        path: "community",
+        model: Community,
+      })
+      .populate({
+        path: "children",
+        populate: {
+          path: "author",
+          model: User,
+          select: "_id name parentId image",
+        },
+      });
 
-  const totalPostsCount = await Thread.countDocuments({
-    parentId: { $in: [null, undefined] },
-  });
+    const posts = await postsQuery.exec();
 
-  const posts = await postsQuery.exec();
-
-  const isNext = totalPostsCount > skipAmount + posts.length;
-
-  return { posts, isNext };
+    return posts as Post[];
+  } catch (error: any) {
+    console.error(`Error fetching posts: ${error.message}`);
+    return null;
+  }
 }
 
 export async function fetchPostById(id: string) {
@@ -210,7 +212,7 @@ export async function addCommentToPost(
   try {
     const originalThread = await Thread.findById(threadId);
     const currentUser = await User.findById(userId);
-    
+
     if (!originalThread) {
       throw new Error("Post not found");
     }

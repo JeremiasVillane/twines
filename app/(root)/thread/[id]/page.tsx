@@ -1,6 +1,6 @@
-import ThreadCard from "@/components/cards/ThreadCard";
-import Comment from "@/components/forms/Comment";
-import { fetchPostById } from "@/lib/actions/thread.actions";
+import PostCard from "@/components/cards/PostCard";
+import NewComment from "@/components/forms/NewComment";
+import { fetchPostById } from "@/lib/actions/post.actions";
 import { fetchUser } from "@/lib/actions/user.actions";
 import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
@@ -20,7 +20,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
     <section className="relative">
       <div>
         {/* @ts-expect-error Async Server Component */}
-        <ThreadCard
+        <PostCard
           key={post._id}
           id={post._id}
           currentUserId={user.id}
@@ -35,7 +35,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
       </div>
 
       <div className="mt-7">
-        <Comment
+        <NewComment
           threadId={post.id}
           currentUserImg={userInfo.image}
           currentUserId={JSON.stringify(userInfo._id)}
@@ -46,7 +46,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
         {post.children.map((childItem: any) => (
           <>
             {/* @ts-expect-error Async Server Component */}
-            <ThreadCard
+            <PostCard
               key={childItem._id}
               id={childItem._id}
               currentUserId={user.id}

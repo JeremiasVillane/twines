@@ -194,7 +194,9 @@ module.exports = {
         "groups-sidebar": "-30px 0px 60px 0px rgba(28, 28, 31, 0.50)",
       },
       screens: {
+        sxs: "500px",
         xs: "400px",
+        xxs: "300px",
       },
       keyframes: {
         "accordion-down": {

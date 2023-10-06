@@ -1,6 +1,6 @@
 "use client";
 
-import { likePost } from "@/lib/actions/thread.actions";
+import { likePost } from "@/lib/actions/post.actions";
 import { Heart } from "lucide-react";
 import { usePathname } from "next/navigation";
 

@@ -1,8 +1,7 @@
-import { SignedIn, SignOutButton, OrganizationSwitcher } from "@clerk/nextjs";
+import { SignedIn, SignOutButton, UserButton } from "@clerk/nextjs";
+import { LogOutIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { dark } from "@clerk/themes";
-import { LogOutIcon } from "lucide-react";
 
 function Topbar() {
   return (
@@ -17,17 +16,16 @@ function Topbar() {
           <SignedIn>
             <SignOutButton>
               <div className="flex cursor-pointer" title="Salir">
-              <LogOutIcon color="white" />
+                <LogOutIcon color="white" />
               </div>
             </SignOutButton>
           </SignedIn>
         </div>
 
-        <OrganizationSwitcher
+        <UserButton
           appearance={{
-            baseTheme: dark,
             elements: {
-              organizationSwitcherTrigger: "py-2 px-4",
+              avatarBox: "h-[40px] w-[40px]",
             },
           }}
         />

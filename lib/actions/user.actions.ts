@@ -4,7 +4,7 @@ import { FilterQuery, SortOrder } from "mongoose";
 import { revalidatePath } from "next/cache";
 import Community from "../models/community.model";
 import Like from "../models/like.model";
-import Thread from "../models/thread.model";
+import Thread from "../models/post.model";
 import User from "../models/user.model";
 import { connectToDB } from "../mongoose";
 
@@ -150,6 +150,34 @@ export async function getActivity(userId: string) {
     const childThreadIds = userThreads.reduce((acc, userThread) => {
       return acc.concat(userThread.children);
     }, []);
+    // const userThreadsIds = userThreads.reduce((acc, userThread) => {
+    //   return acc.concat(userThread._id);
+    // }, []);
+
+    // const usersWhoLikedCurrentUserPosts = await User.find({
+    //   likedPosts: { $in: userThreadsIds },
+    //   _id: { $ne: userId },
+    // })
+    //   .select({
+    //     _id: true,
+    //     name: true,
+    //     likedPosts: true,
+    //   })
+    //   .populate({
+    //     path: "threads",
+    //     model: Thread,
+    //     select: "_id",
+    //   })
+    //   .exec();
+
+    // const currentUserPostsLiked = JSON.parse(
+    //   JSON.stringify(usersWhoLikedCurrentUserPosts)
+    // ).map((user) =>
+    //   user.likedPosts.filter((post) => JSON.stringify(userThreadsIds).includes(post))
+    // );
+
+    // console.log("userThreadsIds: ", JSON.stringify(userThreadsIds));
+    // console.log("currentUserPostsLiked: ", currentUserPostsLiked);
 
     const replies = await Thread.find({
       _id: { $in: childThreadIds },

@@ -1,13 +1,12 @@
-import { isLiked } from "@/lib/actions/thread.actions";
-import Thread from "@/lib/models/thread.model";
-import User from "@/lib/models/user.model";
-import { connectToDB } from "@/lib/mongoose";
-import { formatDateString } from "@/lib/utils";
-import { Forward, MessageSquare, Repeat2 } from "lucide-react";
+import { fetchPostById, isLiked } from "@/lib/actions/post.actions";
+import RenderPost from "@/lib/renderPost";
+import { getTimeAgo } from "@/lib/utils";
+import { MessageSquare, Repeat2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import DeleteButton from "../shared/DeleteButton";
 import LikeButton from "../shared/LikeButton";
+import ShareModal from "../shared/ShareModal";
 
 interface Props {
   id: string;
@@ -30,11 +29,11 @@ interface Props {
       image: string;
     };
   }[];
-  likes: { likedBy: string }[];
+  likes: string[];
   isComment?: boolean;
 }
 
-const ThreadCard = async ({
+const PostCard = async ({
   id,
   currentUserId,
   parentId,
@@ -47,6 +46,7 @@ const ThreadCard = async ({
   isComment,
 }: Props) => {
   const liked = await isLiked(id, currentUserId);
+  const parentPost = parentId ? await fetchPostById(parentId) : null;
 
   return (
     <article
@@ -54,11 +54,27 @@ const ThreadCard = async ({
         isComment ? "px-0 xs:px-7" : "bg-dark-2 p-7"
       }`}
     >
-      {/* {!isComment && parentId && (
-        <span>
+      {!isComment && parentId && (
+        <div className="mb-3 text-small-regular text-gray-1">
           En respuesta a
-        </span>
-      )} */}
+          {parentPost?.author?.id === currentUserId ? (
+            <Link href={`/thread/${parentId}`}>
+              <b> tu publicación</b>
+            </Link>
+          ) : (
+            <>
+              {" la "}
+              <Link href={`/thread/${parentId}`}>
+                <b>publicación</b>
+              </Link>
+              {" de "}
+              <Link href={`/profile/${parentPost?.author?.id}`}>
+                <i>{parentPost?.author?.name}</i>
+              </Link>
+            </>
+          )}
+        </div>
+      )}
       <div className="flex items-start justify-between">
         <div className="flex w-full flex-1 flex-row gap-4">
           <div className="flex flex-col items-center select-none">
@@ -86,18 +102,18 @@ const ThreadCard = async ({
               </Link>
               <p
                 className="text-subtle-medium text-gray-1 py-[0.12rem] select-none cursor-default"
-                title={formatDateString(createdAt, "long")}
+                title={getTimeAgo(createdAt, "long")}
               >
-                {formatDateString(createdAt, "short")}
+                {getTimeAgo(createdAt, "short")}
               </p>
             </div>
 
-            <p className="mt-2 text-small-regular text-light-2 whitespace-pre-line">
-              {content}
-            </p>
+            <div className="post-content">
+              <RenderPost htmlContent={content} />
+            </div>
 
             <div className={`${isComment && "mb-7"} mt-5 flex flex-col gap-3`}>
-              <div className="flex gap-3.5">
+              <div className="flex items-center gap-3.5">
                 <LikeButton
                   threadId={JSON.stringify(id)}
                   userId={JSON.stringify(currentUserId)}
@@ -115,7 +131,9 @@ const ThreadCard = async ({
                 </span>
 
                 <span title="Compartir">
-                  <Forward strokeWidth={1.5} color="rgb(92 92 123)" />
+                  <ShareModal
+                    url={`${process.env.NEXT_PUBLIC_APP_URL}/thread/${id}`}
+                  />
                 </span>
               </div>
 
@@ -161,4 +179,4 @@ const ThreadCard = async ({
   );
 };
 
-export default ThreadCard;
+export default PostCard;

@@ -1,4 +1,4 @@
-import PostThread from "@/components/forms/PostThread";
+import NewPost from "@/components/forms/NewPost";
 import { fetchUser } from "@/lib/actions/user.actions";
 import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
@@ -14,7 +14,7 @@ async function Page() {
     <>
       <h1 className="head-text select-none">Nueva publicación</h1>
 
-      <PostThread userId={JSON.stringify(userInfo._id)} />
+      <NewPost userId={JSON.stringify(userInfo._id)} />
     </>
   );
 }
