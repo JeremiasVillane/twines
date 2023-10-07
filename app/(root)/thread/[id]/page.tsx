@@ -17,8 +17,8 @@ const Page = async ({ params }: { params: { id: string } }) => {
   const post = await fetchPostById(params.id);
 
   return (
-    <section className="relative">
-      <div>
+    <main className="relative">
+      <section id="main-post">
         {/* @ts-expect-error Async Server Component */}
         <PostCard
           key={post._id}
@@ -32,17 +32,17 @@ const Page = async ({ params }: { params: { id: string } }) => {
           comments={post.children}
           likes={post.likes}
         />
-      </div>
+      </section>
 
-      <div className="mt-7">
+      <section id="comment-form" className="mt-7">
         <NewComment
           threadId={post.id}
           currentUserImg={userInfo.image}
           currentUserId={JSON.stringify(userInfo._id)}
         />
-      </div>
+      </section>
 
-      <div className="mt-10">
+      <section id="comments" className="mt-10">
         {post.children.map((childItem: any) => (
           <>
             {/* @ts-expect-error Async Server Component */}
@@ -61,8 +61,8 @@ const Page = async ({ params }: { params: { id: string } }) => {
             />
           </>
         ))}
-      </div>
-    </section>
+      </section>
+    </main>
   );
 };
 

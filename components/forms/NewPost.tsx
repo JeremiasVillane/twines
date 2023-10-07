@@ -3,11 +3,13 @@
 import { createPost } from "@/lib/actions/post.actions";
 import { OrganizationSwitcher, useOrganization } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
+import { SmileIcon } from "lucide-react";
 import dynamic from "next/dynamic";
 import { usePathname, useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import "react-quill/dist/quill.bubble.css";
 import "react-quill/dist/quill.snow.css";
+import EmojiSelector from "../shared/EmojiSelector";
 import { Button } from "../ui/button";
 
 const modules = {
@@ -34,6 +36,8 @@ const NewPost = ({ userId }: { userId: string }) => {
   const pathname = usePathname();
   const { organization } = useOrganization();
   const [value, setValue] = useState<string>("");
+  const [showEmojiSelector, setShowEmojiSelector] = useState<boolean>(false);
+  const emojiButtonRef = useRef<HTMLDivElement>(null);
 
   const ReactQuill = useMemo(
     () => dynamic(() => import("react-quill"), { ssr: false }),
@@ -51,18 +55,41 @@ const NewPost = ({ userId }: { userId: string }) => {
     router.push("/");
   };
 
+  function handleEmojiSelect(emoji: string) {
+    const editor = document.getElementById("editor");
+    const selection = window.getSelection();
+
+    if (editor && selection) {
+      const range = selection.getRangeAt(0);
+      const newNode = document.createTextNode(emoji);
+
+      range.insertNode(newNode);
+
+      range.setEndAfter(newNode);
+      range.setStartAfter(newNode);
+
+      selection.removeAllRanges();
+      selection.addRange(range);
+    }
+  }
+
+  function handleEditorChange(content: string) {
+    setValue(content);
+  }
+
   return (
-    <div className="mt-12 grid w-full gap-2">
+    <main className="mt-12 grid w-full gap-2">
       <ReactQuill
+        id="editor"
         theme="bubble"
         value={value}
-        onChange={setValue}
+        onChange={handleEditorChange}
         modules={modules}
         formats={formats}
         className="border border-solid border-[#1f1f22] rounded-lg bg-[#101012] text-white h-[50vh]"
       />
 
-      <div className="flex items-center justify-start gap-1">
+      <section id="buttons" className="flex items-center justify-start gap-1">
         <OrganizationSwitcher
           appearance={{
             baseTheme: dark,
@@ -77,8 +104,28 @@ const NewPost = ({ userId }: { userId: string }) => {
         >
           Publicar
         </Button>
-      </div>
-    </div>
+        <div
+          id="emoji-picker"
+          className="relative flex items-center justify-center"
+        >
+          <button
+            onClick={() => setShowEmojiSelector(!showEmojiSelector)}
+            title="Emojis"
+          >
+            <span ref={emojiButtonRef}>
+              <SmileIcon className="text-light-1 m-1" />
+            </span>
+          </button>
+          {showEmojiSelector && (
+            <EmojiSelector
+              onSelect={handleEmojiSelect}
+              setShowEmojiSelector={setShowEmojiSelector}
+              emojiButtonRef={emojiButtonRef}
+            />
+          )}
+        </div>
+      </section>
+    </main>
   );
 };
 

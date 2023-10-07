@@ -199,11 +199,11 @@
   @apply rounded-3xl bg-primary-500 px-8 py-2 !text-small-regular text-light-1 max-sxs:w-full !important;
 }
 
-/*:::::: Barra de desplazamiento ::::::*/
+/* Barra de desplazamiento */
 
 /* Ancho */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 9px;
 }
 
 /* Track */
@@ -224,4 +224,29 @@
 /* Handle al posar el mouse */
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
+}
+
+/* Barra de desplazamiento en selector de emojis */
+#scrollable-emoji-categories::-webkit-scrollbar {
+  height: 5px;
+}
+
+#scrollable-emoji-categories::-webkit-scrollbar-thumb {
+  background-color: #877eff;
+}
+
+#scrollable-emoji-categories::-webkit-scrollbar-track {
+  background-color: #555;
+}
+
+#scrollable-emoji-list::-webkit-scrollbar {
+  width: 5px;
+}
+
+#scrollable-emoji-list::-webkit-scrollbar-thumb {
+  background-color: rgb(11, 11, 11);
+}
+
+#scrollable-emoji-list::-webkit-scrollbar-track {
+  background-color: transparent;
 }
