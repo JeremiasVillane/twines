@@ -101,6 +101,9 @@ const NewComment = ({ threadId, currentUserImg, currentUserId }: Props) => {
       </section>
 
       <section id="buttons" className="flex items-center gap-1 max-sxs:w-full">
+        <Button className="comment-form_btn" onClick={handleSubmit}>
+          Publicar
+        </Button>
         <div
           id="emoji-picker"
           className="relative flex items-center justify-center"
@@ -121,9 +124,6 @@ const NewComment = ({ threadId, currentUserImg, currentUserId }: Props) => {
             />
           )}
         </div>
-        <Button className="comment-form_btn" onClick={handleSubmit}>
-          Publicar
-        </Button>
       </section>
     </main>
   );
