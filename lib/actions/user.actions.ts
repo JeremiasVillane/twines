@@ -9,7 +9,7 @@ import User from "../models/user.model";
 import { connectToDB } from "../mongoose";
 
 interface Params {
-  userId: string;
+  userId: string | undefined;
   username: string;
   name: string;
   bio: string;

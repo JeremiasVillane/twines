@@ -26,8 +26,8 @@ const ProfileHeader = async ({
   if (!user) return null;
 
   return (
-    <div className="flex w-full flex-col justify-start">
-      <div className="flex items-center justify-between">
+    <main className="flex w-full flex-col justify-start">
+      <section className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           {user.id === ownerId ? (
             <UserButton
@@ -55,12 +55,12 @@ const ProfileHeader = async ({
             </h2>
           </div>
         </div>
-      </div>
+      </section>
 
       <p className="mt-6 max-w-lg text-base-regular text-light-2">{bio}</p>
 
       <div className="mt-12 h-0.5 w-full bg-dark-3" />
-    </div>
+    </main>
   );
 };
 
