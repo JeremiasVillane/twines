@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@clerk/localizations": "^1.26.0",
-    "@clerk/nextjs": "^4.24.1",
+    "@clerk/nextjs": "^4.29.3",
     "@clerk/themes": "^1.7.6",
     "@clerk/types": "^3.53.0",
     "@hookform/resolvers": "^3.3.1",
